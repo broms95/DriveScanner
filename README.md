@@ -81,6 +81,7 @@ One interesting area to look into is using the Luhn formula to do a first-pass v
 Even better would be looking at the text and formatting around the string to get better context.  Of course this would take time to do right, require test sets.  Almost feels like you could use machine learning to solve for this problem vs trying to handcraft the world's best CC extractor.
 
 Here's running a scan on 78K files of various sizes in my development directory.  
+```
 Threads:                30
 Directories scanned:    16208
 Files scanned:          79525
@@ -90,34 +91,23 @@ Time for phase 2:       2.147 sec
 Total scanning time:    2.984 sec
 Bandwidth (per thread): 0.295664 GB/sec
 Bandwidth (aggregate):  8.86993 GB/sec
+```
 
 Also tried different number of threads.  I have a fairly old workstation with only 4 cores, but it has a very fast SSD (Samsung 9700 something...).  
-Threads	   GB/s per thread  	GB/s total
+```
+Threads    GB/s per thread    GB/s total
 30         0.29               8.86
-20	       0.46	              9.39
-15	       0.56	              8.54
-10	       0.82	              8.25
-5	         1.45	              7.25
-4	         1.64	              6.56
-3	         1.88	              5.64
-2	         2.11	              4.23
-1	         2.37	              2.37
+20         0.46               9.39
+15         0.56               8.54
+10         0.82               8.25
+5          1.45               7.25
+4          1.64               6.56
+3          1.88               5.64
+2          2.11               4.23
+1          2.37               2.37
+```
 Using 5-20 threads seems like the sweet spot -- past that the total bandwidth processed goes down.  Would be good to be conservative here because each thread add overhead, memory, etc.
 
 A few more bits of low hanging fruit:
 1. Starting phase 2 right after phase 1 starts could save real time
 2. Making phase 1 multithreaded instead of marching through a directory tree in a single thread might help too.
-
-
-
-![image](https://github.com/broms95/DriveScanner/assets/16542867/8eb6de0c-3ddc-4ac3-91cf-cb8f37f3f412)
-
-
-
-
-
-
-
-
-
-
